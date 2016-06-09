@@ -1,0 +1,204 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>uk.ac.soton.itinnovation.easyjena</groupId>
+	<artifactId>EasyJena-core</artifactId>
+	<version>1.2</version>
+	<packaging>jar</packaging>
+	<name>EasyJena-core</name>
+	<inceptionYear>2014</inceptionYear>
+	<description>
+		The EasyJena library contains utility classes to load, write, manipulate and reason with RDF/OWL ontologies.
+	</description>
+
+	<licenses>
+		<license>
+			<name>LGPL 2.1</name>
+			<url>http://www.gnu.org/licenses/lgpl-2.1.htm</url>
+		</license>
+	</licenses>
+
+	<properties>
+		<!-- project -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<easyjena.java.version>1.8</easyjena.java.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- SPIN/Jena -->
+		<dependency>
+			<groupId>org.topbraid</groupId>
+			<artifactId>spin</artifactId>
+			<version>1.3.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-core</artifactId>
+			<version>2.12.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-arq</artifactId>
+			<version>2.12.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.13</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+
+		<!--Pretty Logback, see https://github.com/n0rad/logback-prettier-->
+		<dependency>
+			<groupId>fr.norad.logback.prettier</groupId>
+			<artifactId>logback-prettier</artifactId>
+			<version>0.5</version>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+		<!-- Other -->
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+		<!-- SPIN (includes Jena)-->
+		<repository>
+			<id>org.topbraid</id>
+			<url>http://topquadrant.com/repository/spin</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+
+		<!-- Profile for executing unit tests: mvn test -P test -->
+		<profile>
+			<id>test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.19</version>
+						<configuration>
+							<skipTests>false</skipTests>
+							<includes>
+								<include>**/EasyJenaCoreTestSuite.class</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Package JavaDoc -->
+		<profile>
+			<id>package</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.3</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<phase>package</phase>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+								<configuration>
+									<reportOutputDirectory>target/javadoc</reportOutputDirectory>
+									<destDir>.</destDir>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
+	<build>
+		<plugins>
+
+			<!-- Java version-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${easyjena.java.version}</source>
+					<target>${easyjena.java.version}</target>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+
+			<!-- Plug-in to build the project with UTF-8 encoding -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
+

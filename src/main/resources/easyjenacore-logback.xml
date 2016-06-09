@@ -1,0 +1,59 @@
+<configuration>
+
+	<!-- properties & customisation -->
+	<property name="LOG_DIR" value="log" />
+
+	<!-- pretty logback config -->
+	<conversionRule conversionWord="colorlevel"
+					converterClass="fr.norad.logback.prettier.ColorLevelCompositeConverter" />
+	<conversionRule conversionWord="bold"
+					converterClass="fr.norad.logback.prettier.BoldCompositeConverter" />
+
+	<!-- stdout for printing console messages -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.out</target>
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %colorlevel([%-5level]) %logger{0}:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- stderr for printing errors -->
+	<appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.err</target>
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern><![CDATA[%boldBlue(%d{HH:mm:ss.SSS}) %bold([%-10.10thread]) %colorlevel(%-5level) %bold(%-45.45(%41C{41}:%L)) - %colorlevel(%msg) %n]]></pattern>
+		</encoder>
+		<filter class="fr.norad.logback.prettier.ErrFilter" />
+	</appender>
+
+	<!-- logging to file -->
+	<appender name="LOGGING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+		<Append>true</Append>
+		<File>${LOG_DIR}/easyjena.log</File>
+		<encoder>
+			<pattern>%d %-5p [%t] %C:%L - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<maxIndex>10</maxIndex>
+			<FileNamePattern>${LOG_DIR}/easyjena.log.%i</FileNamePattern>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>1024KB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<logger name="uk.ac.soton.itinnovation.easyjena" level="debug">
+	  <appender-ref ref="LOGGING"/>
+	</logger>
+
+	<!-- mute logback errors -->
+	<logger name="ch.qos.logback" level="error"/>
+
+</configuration>

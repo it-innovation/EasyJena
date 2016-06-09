@@ -1,4 +1,5 @@
-*/target/
-*/nbactions.xml
-*/log/
+*target/
+*nbactions.xml
+*nb-configuration.xml
+*log/
 
